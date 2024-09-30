@@ -6,8 +6,7 @@
 
 using namespace std;
 
-//Estructura para la implementacion de la informacion de cada producto
-
+// Estructura para almacenar la información de cada producto
 struct Producto {
     string nombre;
     double precio;
@@ -17,21 +16,27 @@ struct Producto {
     double utilidad;
 };
 
+// Mutex para proteger el acceso a las variables compartidas
 mutex mtx;
 
-void calcularVentasYUtilidad(Producto &prodecuti, int hilo_num, double &total_ventas, double &total_utilidad){
-    count <<"Calculo hilo"<<hilo_num<<"iniciado" end1;
-    this_thread::sleep_for(chrono::seconds(1));
+// Función para el calculo de  las ventas y la utilidad de un producto
+void calcularVentasYUtilidad(Producto &producto, int hilo_num, double &total_ventas, double &total_utilidad) {
+    cout << "Calculo hilo " << hilo_num << " iniciado" << endl;
+    this_thread::sleep_for(chrono::seconds(1)); // Simular procesamiento en paralelo
 
+    // Cálculo de ventas y utilidad
     producto.ventas = producto.unidades_vendidas * producto.precio;
     producto.utilidad = producto.ventas - (producto.unidades_vendidas * producto.costo_fijo);
 
+    // Sección crítica: actualizar las ventas y utilidad totales con protección del mutex
     mtx.lock();
     total_ventas += producto.ventas;
     total_utilidad += producto.utilidad;
     mtx.unlock();
-    count <<"Calculo hilo"<<hilo_num<<"terminado"<<end1;
+
+    cout << "Calculo hilo " << hilo_num << " terminado" << endl;
 }
+
 int main() {
     // Los datos del mes de julio
     vector<Producto> productos_julio = {
